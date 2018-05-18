@@ -4,8 +4,12 @@
   "description": "",
   "main": "index.js",
   "scripts": {
+    "start": "node server/server.js", //Heroku reads this start script
     "test": "mocha server/**/*.test.js",
     "test-watch": "nodemon --exec 'npm test'"
+  },
+  "engines": {
+    "node": "8.0.0" //tells which version to use of node, has to be over 6
   },
   "author": "",
   "license": "ISC",
