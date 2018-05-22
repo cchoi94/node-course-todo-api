@@ -8,6 +8,7 @@ const _ = require('lodash')
 const {mongoose} = require('./db/mongoose');
 const {Todo} = require('./models/todos');
 const {User} = require('./models/user');
+const {authenticate} = require('./middleware/authenticate')
 
 const app = express();
 const port = process.env.PORT || 3000;
@@ -22,21 +23,6 @@ app.post('/todos', (req, res) => {
     todo.save().then((doc) => {
         res.send(doc)
     }, (err) => {
-        res.status(400).send(err)
-    })
-})
-
-app.post('/users', (req, res) => {
-    const body = _.pick(req.body, ['email', 'password']);
-    const user = new User(body);
-
-    // User.findByToken
-
-    user.save().then(() => {
-        return user.generateAuthToken(); //return here cause were expecting a chaining promise
-    }).then((token) => {
-        res.header('x-auth', token).send(user)
-    }).catch((err) => {
         res.status(400).send(err)
     })
 })
@@ -116,6 +102,38 @@ app.patch('/todos/:id', (req, res) => {
     })
 })
 
+app.post('/users', (req, res) => {
+    const body = _.pick(req.body, ['email', 'password']);
+    const user = new User(body);
+
+    // User.findByToken
+
+    user.save().then(() => {
+        return user.generateAuthToken(); //return here cause were expecting a chaining promise
+    }).then((token) => {
+        res.header('x-auth', token).send(user)
+    }).catch((err) => {
+        res.status(400).send(err)
+    })
+})
+
+app.get('/users/me', authenticate, (req, res) => {
+//     const token = req.header('x-auth');
+    
+//     console.log(token);
+//     User.findByToken(token).then((user) => {
+//         console.log('sup fam', user)
+//         if(!user) {
+//             return Promise.reject()
+//         }
+
+//         res.send(user);
+//     }).catch((err) => {
+//         res.status(401).send()
+//     })
+
+    res.send(req.user)
+})
 
 
 app.listen(port, () => {
