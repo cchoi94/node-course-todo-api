@@ -26,6 +26,21 @@ app.post('/todos', (req, res) => {
     })
 })
 
+app.post('/users', (req, res) => {
+    const body = _.pick(req.body, ['email', 'password']);
+    const user = new User(body);
+
+    // User.findByToken
+
+    user.save().then(() => {
+        return user.generateAuthToken(); //return here cause were expecting a chaining promise
+    }).then((token) => {
+        res.header('x-auth', token).send(user)
+    }).catch((err) => {
+        res.status(400).send(err)
+    })
+})
+
 app.get('/todos', (req, res) => {
     Todo.find().then((todos) => {
         res.send({
@@ -100,6 +115,8 @@ app.patch('/todos/:id', (req, res) => {
         res.status(404).send()
     })
 })
+
+
 
 app.listen(port, () => {
     console.log(`Started on port ${port}`)
