@@ -117,10 +117,9 @@ app.post('/users', (req, res) => {
     })
 })
 
-app.get('/users/me', authenticate, (req, res) => {
+app.get('/users/me', authenticate, (req, res) => { //if there are 3 arguments, the second one is the middlware
 //     const token = req.header('x-auth');
     
-//     console.log(token);
 //     User.findByToken(token).then((user) => {
 //         console.log('sup fam', user)
 //         if(!user) {

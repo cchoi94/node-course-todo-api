@@ -29,17 +29,37 @@ const {SHA256} = require('crypto-js')
 
 ///////////////////////
 
-const jwt = require('jsonwebtoken');
+// const jwt = require('jsonwebtoken');
 
-const data = {
-    id: 10
-}
+// const data = {
+//     id: 10
+// }
 
-const token = jwt.sign(data, '123abc'); //here, you are hashing data as the info and '123abc' is the salt
-console.log(token)
+// const token = jwt.sign(data, '123abc'); //here, you are hashing data as the info and '123abc' is the salt
+// console.log(token)
 
-const decoded = jwt.verify(token, '123abc'); //only if seceret and token is not altered, then we will get info back
-console.log('decoded', decoded)
+// const decoded = jwt.verify(token, '123abc'); //only if seceret and token is not altered, then we will get info back
+// console.log('decoded', decoded)
 
 // jwt.sign //creates hash and returns token
 // jwt.verify //takes token and make sure data is not manipulated
+
+//////////////////////////
+
+//hasing password
+
+const bcrypt = require('bcryptjs');
+
+const password = '123abc!';
+
+bcrypt.genSalt(10, (err, salt) => {
+    bcrypt.hash(password, salt, (err, hash) => {
+        console.log(password)
+    })
+})
+
+const hashPassword = '$2a$10$0afv8eYp57JbddWo1M44q.hig2BYFC2IGCYIvHeSR0cMNcYyDNuN.'
+
+bcrypt.compare(password, hashPassword, (err, res) => { //res is a boolean whether or not the password and hashPassword match
+    console.log(res)
+})
