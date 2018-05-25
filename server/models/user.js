@@ -86,6 +86,26 @@ UserSchema.statics.findByToken = function (token) { //.statics create model meth
     })
 } 
 
+UserSchema.statics.findByCredentials = function (email, password) {
+    const User = this;
+
+    return User.findOne({email}).then((user) => {
+        if (!user) {
+            return Promise.reject()
+        }
+
+        return new Promise((resolve, reject) => {
+            bcrypt.compare(password, user.password, (err, res) => {
+                if (res === true) {
+                    resolve(user)
+                } else {
+                    reject();
+                }
+            })
+        })
+    })
+}
+
 UserSchema.pre('save', function(next) {
     var user = this;
 
